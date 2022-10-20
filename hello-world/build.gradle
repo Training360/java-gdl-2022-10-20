@@ -1,0 +1,17 @@
+defaultTasks "hello"
+
+tasks.register("hello") {
+  dependsOn tasks.intro
+  group "Demo"
+  description "Prints a welcome message."
+  doLast {
+    println "Hello world!"
+  }
+}
+
+tasks.register("intro") {
+    group "Demo"
+    doLast {
+        println "I'm Gradle"
+    }
+}

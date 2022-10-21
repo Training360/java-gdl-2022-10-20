@@ -4,6 +4,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
+import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -20,14 +21,9 @@ public class HelloService {
        return "Hello " + name;
    }
 
+   @SneakyThrows
    public void writeCodeToFile(String text, Path path) {
-       try {
-           var matrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, 200, 200);
-           MatrixToImageWriter.writeToPath(matrix, "png", path);
-       }
-       catch (WriterException | IOException e) {
-           throw new IllegalStateException("Can not create qr code", e);
-       }
-
+       var matrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, 200, 200);
+       MatrixToImageWriter.writeToPath(matrix, "png", path);
    }
 }

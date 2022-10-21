@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateEmployeeCommand implements Auditable {
+public class CreateEmployeeCommand {
 
     @NotBlank
     @Schema(description = "the name of the employee", example = "John Doe")

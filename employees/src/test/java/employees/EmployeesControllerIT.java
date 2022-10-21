@@ -34,7 +34,7 @@ class EmployeesControllerIT {
     @Test
     //@RepeatedTest(2)
     void testCreateThanList() {
-        var name = "John Doe " + UUID.randomUUID().toString();
+        var name = "John Doe " + UUID.randomUUID();
         log.info("Name: {}", name);
         webClient.post()
                 .uri("/api/employees")

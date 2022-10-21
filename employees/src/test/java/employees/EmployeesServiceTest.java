@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.util.Optional;
 
@@ -25,28 +26,20 @@ class EmployeesServiceTest {
     EmployeesRepository employeesRepository;
 
     @Mock
-    AuditService auditService;
-
-    @Mock
     AddressesGateway addressesGateway;
 
     @Mock
-    EventsGateway eventsGateway;
-
-    @Mock
-    MeterRegistry meterRegistry;
+    ApplicationEventPublisher publisher;
 
     EmployeesService employeesService;
 
     @BeforeEach
     void init() {
-
-        employeesService = new EmployeesService(employeesRepository, new EmployeesMapperImpl(), auditService, addressesGateway, eventsGateway, meterRegistry);
+        employeesService = new EmployeesService(employeesRepository, new EmployeesMapperImpl(), addressesGateway, publisher);
     }
 
     @Test
     void testSave() {
-        when(meterRegistry.counter(anyString())).thenReturn(mock(Counter.class));
         employeesService.createEmployee(new CreateEmployeeCommand("John Doe"));
 
         verify(employeesRepository).save(argThat(e -> e.getName().equals("John Doe")));

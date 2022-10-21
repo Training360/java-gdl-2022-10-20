@@ -1,10 +1,10 @@
 package employees;
 
-import lombok.Value;
+import lombok.Getter;
 
-@Value
 public class EmployeeAlreadyExistsException extends RuntimeException {
 
+    @Getter
     private String name;
     public EmployeeAlreadyExistsException(String name) {
         super("Employee exist with name " + name);

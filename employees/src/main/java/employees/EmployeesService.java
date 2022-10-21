@@ -1,15 +1,11 @@
 package employees;
 
-import auditing.AuditService;
 import employees.addressesgateway.AddressesGateway;
-import employees.eventsgateway.EventsGateway;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
@@ -21,27 +17,13 @@ public class EmployeesService {
 
     private EmployeesMapper employeesMapper;
 
-    private AuditService auditService;
-
     private AddressesGateway addressesGateway;
 
-    private EventsGateway eventsGateway;
-
-    private MeterRegistry meterRegistry;
-
-    @PostConstruct
-    public void init() {
-        Counter.builder("employees.created")
-                .description("The number of the created employees")
-                .baseUnit("number")
-                .register(meterRegistry);
-    }
+    private ApplicationEventPublisher publisher;
 
     public EmployeeDto createEmployee(CreateEmployeeCommand command) {
         log.info("Create employee");
         log.debug("Create employee with name {}", command.getName());
-
-        auditService.audit(command);
 
         if (repository.findEmployeeByNameIgnoreCase(command.getName()).isPresent()) {
             throw new EmployeeAlreadyExistsException(command.getName());
@@ -50,9 +32,8 @@ public class EmployeesService {
         var employee = new Employee(command.getName());
         repository.save(employee);
 
-        meterRegistry.counter("employees.created").increment();
-
-        eventsGateway.sendMessage("Employee has been created with name: " + command.getName());
+        // TODO Mapper
+        publisher.publishEvent(new EmployeeCreatedEvent(employee.getId(), employee.getName()));
 
         return employeesMapper.toDto(employee);
     }

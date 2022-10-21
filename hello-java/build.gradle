@@ -28,8 +28,13 @@ test {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.1'
+    def zxingVersion = "3.5.0"
+    implementation "com.google.zxing:core:${zxingVersion}"
+    implementation "com.google.zxing:javase:${zxingVersion}"
+
+    def junitVersion = "5.9.1"
+    testImplementation "org.junit.jupiter:junit-jupiter-api:$junitVersion"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junitVersion"
 }
 
 jacoco {

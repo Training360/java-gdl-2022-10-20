@@ -4,6 +4,8 @@ plugins {
   id 'com.adarshr.test-logger' version '3.2.0'
   id 'com.github.johnrengelman.shadow' version '7.1.2'
   id 'org.sonarqube' version '3.4.0.2513'
+  id "com.jfrog.artifactory" version "4.29.2"
+  id "maven-publish"
 }
 
 java {
@@ -63,4 +65,34 @@ sonarqube {
         property "sonar.jacoco.xmlReportPath", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
         property "sonar.login", "59ae988a50fde3383afbd033f0354dfa0c68f576"
     }
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+artifactory {
+  group = "training"
+  version = "1.0.0-SNAPSHOT"
+
+  contextUrl = 'http://localhost:8085/artifactory'
+
+  publish {
+        repository {
+            repoKey = 'libs-snapshot-local'
+	    username = "admin"
+            password = "password"
+	}
+	defaults {
+            publications('mavenJava')
+            publishArtifacts = true
+            properties = ['qa.level': 'basic', 'dev.team' : 'core']
+        }
+  }
+
+
 }

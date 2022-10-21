@@ -1,0 +1,48 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.5'
+    id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'java'
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    def mapstructVersion = "1.5.2.Final"
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-artemis'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.postgresql:postgresql'
+    implementation 'org.projectlombok:lombok'
+    implementation 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+    implementation 'org.zalando:problem-spring-web-starter:0.27.0'
+    implementation 'org.springdoc:springdoc-openapi-ui:1.6.9'
+    implementation "org.mapstruct:mapstruct:$mapstructVersion"
+    implementation 'training:audit-logging:1.0-SNAPSHOT'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor "org.mapstruct:mapstruct-processor:$mapstructVersion"
+    runtimeOnly 'org.springframework.boot:spring-boot-devtools'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'com.h2database:h2'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+}
+
+group = 'training'
+version = '0.0.1-SNAPSHOT'
+description = 'employees'
+java.sourceCompatibility = '17'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+

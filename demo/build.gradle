@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'java'
 	id 'com.github.ben-manes.versions' version '0.43.0'
+	id 'jacoco'
 }
 
 group = 'training'
@@ -13,10 +14,22 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+    integrationTestImplementation.extendsFrom implementation
+    integrationTestRuntimeOnly.extendsFrom runtimeOnly
 }
 
 repositories {
 	mavenCentral()
+}
+
+
+sourceSets {
+    integrationTest {
+        java.srcDir "$projectDir/src/integration/java"
+        resources.srcDir "$projectDir/src/integration/resources"
+        compileClasspath += main.output
+        runtimeClasspath += main.output
+    }
 }
 
 dependencies {
@@ -24,8 +37,25 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	integrationTestImplementation 'org.springframework.boot:spring-boot-starter-test'
+    integrationTestImplementation 'org.springframework.boot:spring-boot-starter-webflux'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.register('integrationTest', Test) {
+    description = 'Runs integration tests.'
+    group = 'verification'
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    shouldRunAfter test
+    finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+   getExecutionData().setFrom(fileTree(buildDir).include("/jacoco/*.exec"))
 }

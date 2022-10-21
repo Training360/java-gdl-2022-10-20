@@ -3,6 +3,7 @@ plugins {
   id 'jacoco'
   id 'com.adarshr.test-logger' version '3.2.0'
   id 'com.github.johnrengelman.shadow' version '7.1.2'
+  id 'org.sonarqube' version '3.4.0.2513'
 }
 
 java {
@@ -49,4 +50,17 @@ jacoco {
 
 jacocoTestReport {
   dependsOn test
+  reports {
+         xml.enabled true
+         csv.enabled true
+  }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "hello-java"
+        property "sonar.projectKey", "training:hello-java"
+        property "sonar.jacoco.xmlReportPath", "${project.buildDir}/reports/jacoco/test/jacocoTestReport.xml"
+        property "sonar.login", "59ae988a50fde3383afbd033f0354dfa0c68f576"
+    }
 }
